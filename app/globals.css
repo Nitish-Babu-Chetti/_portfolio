@@ -1,26 +1,248 @@
 @import "tailwindcss";
 
+/* ---------- Runtime variables ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #E6E1D3;   /* light skin tone */
+  --foreground: #1C1C1C;   /* deep gray text */
+  --navbar-bg: #C0B9A0;    /* muted gray-beige */
+  --glossy-bg: #C0B9A0;    /* same for glossy divs */
+  --skin: #C0B9A0;
+  --folder-gradient-from: #C9EAD8;
+  --folder-gradient-via: #A3D9C9;
+  --folder-gradient-to: #89C2D9;
+  --folder-border: rgba(50, 90, 80, 0.3);
+  --folder-shadow: rgba(0, 0, 0, 0.3);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* ---------- Dark Mode (Emerald → Blue Gradient) ---------- */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* 🌌 Global dark background — inspired by Projects section */
+    --background: linear-gradient(to bottom right, #0A1A17 0%, #10594A 40%, #0A3D66 100%);
+    --foreground: #E9F7EF;
+    --navbar-bg: rgba(12, 35, 31, 0.8);
+    /* glass panels on top of gradient */
+    --glossy-bg: rgba(15, 40, 45, 0.5);
+    --skin: #A9EAB5;
+    --folder-gradient-from: #064E3B;
+    --folder-gradient-via: #036564;
+    --folder-gradient-to: #0B4C61;
+    --folder-border: rgba(16, 185, 129, 0.4);
+    --folder-shadow: rgba(0, 0, 0, 0.65);
   }
+
+  circle {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+  }
+}
+
+/* ---------- Page ---------- */
+html {
+  scroll-behavior: smooth;
+}
+
+button
+{
+  cursor: pointer;
 }
 
 body {
   background: var(--background);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  transition: background 1.2s ease-in-out, color 0.7s ease;
+}
+
+/* ---------- Glossy Panels ---------- */
+.glossy {
+  position: relative;
+  overflow: hidden;
+  background: var(--glossy-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(18px) saturate(160%);
+  transition: all 0.6s ease;
+  /* box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.6),
+    inset 0 0 10px rgba(169, 234, 181, 0.05); */
+}
+
+.glossy::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(52, 211, 153, 0.12),
+    rgba(56, 189, 248, 0.10),
+    transparent
+  ); /* 🟢 emerald → 🩵 cyan overlay */
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.glossy:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.8),
+    inset 0 0 30px rgba(255, 255, 255, 0.08),
+    0 0 10px rgba(169, 234, 181, 0.15);
+}
+
+/* 🌞🌙 Theme transition animation */
+.theme-transition {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 160px;
+  opacity: 0;
+  z-index: 9999;
+  pointer-events: none;
+  animation: riseUp 2s ease-out forwards;
+  text-shadow: 0 0 40px rgba(255, 255, 255, 0.9);
+  filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.6));
+}
+
+@keyframes riseUp {
+  0% {
+    transform: translate(-50%, 400px) scale(0.9);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, 250px) scale(1.1);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -200px) scale(1);
+  }
+  100% {
+    transform: translate(-50%, -700px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-in-out;
+}
+
+.text-skin {
+  color: var(--skin);
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.rotate-round {
+  animation: rotate 10s linear infinite;
+}
+
+.rotate-round:hover
+{
+  cursor: pointer;
+  animation-play-state: paused;
+}
+
+/* ---------- Line Flow for Timelines ---------- */
+@keyframes lineFlow {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 0% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+.animate-lineFlow {
+  background-size: 200% 200%;
+  animation: lineFlow 3s linear infinite;
+}
+
+/* ---------- Blinking Current Dot ---------- */
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 12px #8FBC8B;
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+    box-shadow: 0 0 25px #A9EAB5;
+  }
+}
+
+.animate-blink {
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+@keyframes rotateGlow {
+  0% {
+    transform: rotate(0deg);
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
+}
+
+.animate-rotate-glow {
+  animation: rotateGlow 6s linear infinite;
+  background-size: 400% 400%;
+  transition: all 0.5s ease-in-out;
+}
+
+/* gentle blinking/pulse for the current role card (subtle scale + glow) */
+@keyframes currentCardPulse {
+  0% {
+    box-shadow: 0 0 6px rgba(143,188,139,0.18);
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(143,188,139,0.45);
+    transform: translateY(-3px);
+    opacity: 0.98;
+  }
+  100% {
+    box-shadow: 0 0 6px rgba(143,188,139,0.18);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-current-blink {
+  animation: currentCardPulse 1.8s ease-in-out infinite;
+}
+
+/* Keep existing dot blink if you use it */
+@keyframes blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.95); }
+}
+.animate-dot-blink { animation: blink 1.5s ease-in-out infinite; }
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-current-blink,
+  .animate-dot-blink {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .folder-stack {
+    transform: none !important;
+    perspective: none !important;
+  }
 }
