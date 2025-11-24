@@ -3,18 +3,19 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import ProjectDetailsCard from "./DetailProjectCard";
+import type {Project} from './DetailProjectCard'
 
-type CarouselItem = {
-  id: number;
-  name: string;
-  description?: string;
-  image?: string;
-  github?: string;
-  live?: string;
-};
+// type CarouselItem = {
+//   id: number;
+//   name: string;
+//   description?: string;
+//   image?: string;
+//   github?: string;
+//   live?: string;
+// };
 
 type Props = {
-  items: CarouselItem[];
+  items: Project[];
   onClose?: () => void;
 };
 
@@ -51,7 +52,7 @@ export default function CinematicCarousel({ items, onClose }: Props) {
 
   // If project details open
   if (openProjectId) {
-    const project = items.find((p) => p.id === openProjectId);
+    const project = items?.find((p) => p.id === openProjectId);
     return (
       <ProjectDetailsCard
         project={project || null}

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { FaGithub, FaExternalLinkAlt, FaTimes } from "react-icons/fa";
 
-type Project = {
+export type Project = {
   id: number;
   name: string;
   description: string;

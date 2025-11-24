@@ -15,7 +15,7 @@ export default function Navbar() {
     { id: "contact", icon: <FaEnvelope />, label: "Contact" },
   ];
 
-  const handleScroll = (id) => {
+  const handleScroll = (id : string) => {
     const section = document.getElementById(id);
     if (section) {
       const offsetTop = section.offsetTop - 80;
